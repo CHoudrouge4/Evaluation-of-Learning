@@ -21,24 +21,22 @@ def convert_to_binary_class(data, c):
             data[i][c] = 'nonuser'
 
 # Binary Encoding
-def prepare_targets(y_train, y_test):
+def prepare_targets(y):
     le = LabelEncoder()
-    le.fit(y_train)
-    y_train_enc = le.transform(y_train)
-    y_test_enc = le.transform(y_test)
+    le.fit(y)
+    y_enc = le.transform(y)
     #print(le.classes_)
-    return y_train_enc, y_test_enc
+    return y_enc
 
 # Feature Selection
-def feature_selection(X_train, X_test, y_train, y_test):
+def feature_selection(X, y):
     fs = SelectKBest(score_func=f_classif, k=5)
-    fs.fit(X_train, y_train)
-    X_train_fs = fs.transform(X_train)
-    X_test_fs = fs.transform(X_test)
+    fs.fit(X, y)
+    X_fs = fs.transform(X)
 
     for i in range(len(fs.scores_)):
     	print('Feature %d: %f' % (i, fs.scores_[i]))
     # plot the scores
     pyplot.bar([i for i in range(len(fs.scores_))], fs.scores_)
     pyplot.show()
-    return X_train_fs, X_test_fs
+    return X_fs
