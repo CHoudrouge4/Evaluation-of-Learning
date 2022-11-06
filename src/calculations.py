@@ -1,4 +1,5 @@
 import numpy as np
+import statistics
 
 # Compute Sensitivity
 def sensitivity(TP, Pos):
@@ -80,4 +81,31 @@ def get_tex_file(l, i):
 def get_stat_tex(l, i):
     tex = display_stat_latex_table(l)
     with open('./results/stat_table' + str(i)+ '.tex', 'w') as f:
+        f.write(tex)
+
+def cross_validation_table(stats):
+    tex = '\\begin{table}[!h]\n'
+    tex += '\\begin{tabular}{l| l  l  l  l  l  l}\n'
+    tex += 'Model & DT & RF & SVM & KNN & MLP & GBC \\\\\\hline\n'
+    for j in range(10):
+        tex += str(j)
+        for i in range(len(stats)):
+            tex += '&' + str(round(stats[i][j], 4))
+        tex += '\\\\\n'
+    tex += '\\\\\\hline\n'
+    tex += 'mean'
+    for l in stats:
+        tex += '&' + str(round(statistics.mean(l), 4))
+    tex += 'stddev'
+    for k in stats:
+        tex += '&' + str(round(statistics.stdev(k), 4))
+    tex += '\\\\\\hline\n'
+    tex += '\\end{tabular}\n'
+    tex += '\\caption{}\n'
+    tex += '\\end{table}\n'
+    return tex
+
+def get_cross_validation_table(stats):
+    tex = cross_validation_table(stats)
+    with open('./results/cross_val' + '.tex', 'w') as f:
         f.write(tex)

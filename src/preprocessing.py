@@ -2,6 +2,7 @@ import pandas as pd
 from matplotlib import pyplot
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_selection import SelectKBest, f_classif, chi2, mutual_info_classif, SelectFpr, GenericUnivariateSelect
+import numpy as np
 
 # read data from file.
 def get_data(file_name):
@@ -28,9 +29,11 @@ def prepare_targets(y):
     #print(le.classes_)
     return y_enc
 
+
+
 # Feature Selection
-def feature_selection(X, y):
-    fs = SelectKBest(score_func=f_classif, k=5)
+def feature_selection(X, y, K):
+    fs = SelectKBest(score_func=f_classif, k=K)
     fs.fit(X, y)
     X_fs = fs.transform(X)
 
@@ -40,3 +43,25 @@ def feature_selection(X, y):
     pyplot.bar([i for i in range(len(fs.scores_))], fs.scores_)
     pyplot.show()
     return X_fs
+
+
+def treat_labor_data(file_name):
+    print("Getting Data ...")
+    data = get_data(file_name)
+    #print(data)
+
+    X = data[:, 0:16]
+    labels = data[:, 16]
+    Chatigorical = [4, 6, 9, 11, 12, 13, 14, 15]
+
+    for c in Chatigorical:
+        le = LabelEncoder()
+        le.fit(X[:, c])
+        X[:, c] = le.transform(X[:, c])
+    m, n = X.shape
+    for i in range(m):
+        for j in range(n):
+            if X[i][j] == '?':
+                X[i][j] = '-1'
+    X = X.astype(np.float)
+    return X, labels

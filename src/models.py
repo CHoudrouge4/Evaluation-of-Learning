@@ -46,7 +46,7 @@ def model_MLP(X_train_fs, X_test_fs, y_train, y_test):
     parameter_space = {
     'hidden_layer_sizes': [(5, 5, 5), (5, 10, 5), (5, 5, 5, 5)],
     'activation': ['tanh', 'relu'],
-    'solver': ['adam'],
+    'solver': ['adam', 'sgd'],
     'alpha': [0.0001],
     'learning_rate': ['constant','adaptive'],
     }
