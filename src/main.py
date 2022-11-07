@@ -105,9 +105,33 @@ def labor_neg():
          stats.append(l)
     get_cross_validation_table(stats)
 
+def heart_data():
+    file_name = './data/heart.csv'
+    print("Getting Data ...")
+    data = get_data(file_name)
+    #print(data)
+    print(data.shape)
+
+    X = data[:, 0:13]
+    print(X)
+    labels = data[:, 13]
+    # print(X)
+    print(labels)
+    scaler = StandardScaler()
+    scaler.fit(X)
+    X_scaled = scaler.transform(X)
+    X_fs = feature_selection(X_scaled, labels, 7)
+    models = [model_DT, model_RF, model_SVM, model_KNN, model_MLP, model_GBC]
+    stats = []
+    for m in models:
+         l = cross_validation(X_fs, labels, m, 3)
+         stats.append(l)
+    get_cross_validation_table(stats)
+
 def main():
     #drug_data()
-    labor_neg()
+    #labor_neg()
+    #heart_data()
 
 if __name__ == "__main__":
     main()
